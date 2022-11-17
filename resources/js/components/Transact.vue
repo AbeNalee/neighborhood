@@ -33,8 +33,8 @@ export default {
             this.amount += (value.sell_price * value.quantity);
             this.count++;
         },
-        doTransact: function() {
-            axios.post('/transact', {
+        doTransact: async function() {
+            await axios.post('/transact', {
                 items: this.items,
                 amount: this.amount,
                 purpose: this.purpose

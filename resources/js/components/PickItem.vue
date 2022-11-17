@@ -44,10 +44,10 @@ export default {
         }
     },
     methods: {
-        searchItem: function () {
+        searchItem: async function () {
             this.searchResults = [];
             if (this.searchTerm.length > 2) {
-                axios.get('/search', {params: {query: this.searchTerm}})
+                await axios.get('/search', {params: {query: this.searchTerm}})
                     .then(r => {
                         this.searchResults = r.data;
                     })
