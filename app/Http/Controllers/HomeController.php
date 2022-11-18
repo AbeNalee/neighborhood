@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $data = Product::select("name", "sell_price", "id", "stock")
+        $data = Product::select("name", "sell_price", "id", "stock", "buy_price")
             ->where("name","LIKE","%{$request->query('query')}%")
             ->isInStock()
             ->get();

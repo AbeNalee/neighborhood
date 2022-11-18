@@ -46,6 +46,11 @@ class Product extends Model
         return $query->where('stock', '>', 0);
     }
 
+    public function scopeIsOldestStock($query)
+    {
+        return $query->where('stock_date', ''); //todo: get oldest stock for specific name
+    }
+
     /*
      * Relationships
      */

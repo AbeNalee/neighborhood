@@ -5388,6 +5388,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['purpose'],
   data: function data() {
     return {
       searchTerm: null,
@@ -5395,7 +5396,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       quantity: 1,
       canAdd: false,
       item: null,
-      added: false
+      added: false,
+      amount: null
     };
   },
   methods: {
@@ -5433,12 +5435,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     selectItem: function selectItem(res) {
       this.searchResults = [];
-      this.searchTerm = res.name + " (Ksh." + res.sell_price + ")";
+      this.searchTerm = res.name + " (Ksh." + (this.purpose === 'purchase' ? res.sell_price : res.buy_price) + ")";
       this.item = res;
       this.canAdd = true;
     },
     addItem: function addItem() {
+      this.amount = this.purpose === 'purchase' ? this.item.sell_price * this.quantity : this.item.buy_price * this.quantity;
       this.$set(this.item, 'quantity', parseInt(this.quantity));
+      this.$set(this.item, 'amount', parseInt(this.amount));
       this.$emit('add-item', this.item);
       this.added = true;
     }
@@ -5495,7 +5499,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   methods: {
     addItem: function addItem(value) {
       this.items.push(value);
-      this.amount += value.sell_price * value.quantity;
+      this.amount += value.amount;
       this.count++;
     },
     doTransact: function () {
@@ -28562,17 +28566,24 @@ var render = function () {
           [
             _c("span", { staticClass: "col-7 text-dark" }, [
               _vm._v("\n            " + _vm._s(_vm.item.name)),
-              _c("small", { staticClass: "text-dark" }, [
-                _vm._v("x" + _vm._s(_vm.item.quantity)),
+              _c("small", { staticClass: "text-dark fw-bolder" }, [
+                _vm._v(" x" + _vm._s(_vm.item.quantity)),
               ]),
             ]),
             _vm._v(" "),
             _c("span", { staticClass: "col-5 float-end" }, [
-              _vm._v("@" + _vm._s(_vm.item.sell_price)),
+              _vm._v(
+                "@" +
+                  _vm._s(
+                    _vm.purpose === "purchase"
+                      ? _vm.item.sell_price
+                      : _vm.item.buy_price
+                  )
+              ),
             ]),
             _vm._v(" "),
             _c("span", { staticClass: "fw-bold text-center h5 col-12 mb-0" }, [
-              _vm._v(_vm._s(_vm.item.quantity * _vm.item.sell_price)),
+              _vm._v(_vm._s(_vm.amount)),
             ]),
           ]
         )
@@ -28625,7 +28636,11 @@ var render = function () {
                             "\n                        " +
                               _vm._s(res.name) +
                               "(Ksh." +
-                              _vm._s(res.sell_price) +
+                              _vm._s(
+                                _vm.purpose === "purchase"
+                                  ? res.sell_price
+                                  : res.buy_price
+                              ) +
                               ")\n                    "
                           ),
                         ]
@@ -28722,7 +28737,11 @@ var render = function () {
       "div",
       { staticClass: "card-body" },
       _vm._l(_vm.count, function (num) {
-        return _c("pick-item", { key: num, on: { "add-item": _vm.addItem } })
+        return _c("pick-item", {
+          key: num,
+          attrs: { purpose: _vm.purpose },
+          on: { "add-item": _vm.addItem },
+        })
       }),
       1
     ),

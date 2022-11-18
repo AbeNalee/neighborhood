@@ -4,28 +4,28 @@
 <div class="container">
     <div class="row my-2 text-center">
         <div class="col-6 col-lg-3 my-1">
-            <div class="card card-body bg-success bg-opacity-25">
+            <a class="card card-body bg-success bg-opacity-25 btn">
                 <h4>{{ $sales = \App\Models\Cart::totalSales() }}</h4>
                 <small>sold</small>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3 my-1">
-            <div class="card card-body bg-warning bg-opacity-25">
+            <a class="card card-body bg-warning bg-opacity-25 btn">
                 <h4>{{ $spend = abs(\App\Models\Cart::totalSpent()) }}</h4>
                 <small>spent</small>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3 my-1">
-            <div class="card card-body bg-info bg-opacity-25">
+            <a class="card card-body bg-info bg-opacity-25 btn">
                 <h4>{{ $sales - $spend }}</h4>
                 <small>profit</small>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3 my-1">
-            <div class="card card-body bg-primary bg-opacity-25">
+            <a class="card card-body bg-primary bg-opacity-25 btn">
                 <h4>{{ \App\Models\Product::all()->sum('value') }}</h4>
                 <small>in stock</small>
-            </div>
+            </a>
         </div>
     </div>
     <hr>

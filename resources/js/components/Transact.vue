@@ -5,7 +5,7 @@
             <span class="bg-info float-end py-0 px-2 rounded">Ksh. {{ amount }}</span>
         </div>
         <div class="card-body">
-            <pick-item v-on:add-item="addItem" v-for="num in count" :key="num"></pick-item>
+            <pick-item :purpose="purpose" v-on:add-item="addItem" v-for="num in count" :key="num"></pick-item>
         </div>
         <div class="card-footer" v-if="items.length">
             <button class="btn btn-primary" @click="doTransact">Complete</button>
@@ -30,7 +30,7 @@ export default {
     methods: {
         addItem: function (value) {
             this.items.push(value);
-            this.amount += (value.sell_price * value.quantity);
+            this.amount += value.amount;
             this.count++;
         },
         doTransact: async function() {
