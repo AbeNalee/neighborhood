@@ -10,7 +10,7 @@ class Purchase extends Model
     use HasFactory;
 
     protected $fillable = [
-        'status',
+        'status', 'purpose'
     ];
 
     public function cart()

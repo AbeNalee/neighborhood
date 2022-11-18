@@ -16,6 +16,7 @@ class CreatePurchasesTable extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->string('status')->default('PENDING');
+            $table->string('purpose')->default('purchase');
             $table->timestamps();
         });
     }

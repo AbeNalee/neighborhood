@@ -87,7 +87,9 @@ class ProductController extends Controller
 
     public function transact(Request $request)
     {
-        $purchase = Purchase::create();
+        $purchase = Purchase::create([
+            'purpose' => $request->purpose
+        ]);
         $cart = Cart::create([
             'value' => $request->purpose === 'purchase' ? (int)$request->amount : -1 * abs((int)$request->amount),
             'purchase_id' => $purchase->id
