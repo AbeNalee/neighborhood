@@ -37,8 +37,10 @@
             <div class="card">
                 <div class="card-header">
                     <span class="">Low Stock (lt 5)</span>
-                    <button class="btn btn-secondary float-end py-0" data-bs-toggle="modal"
+                    @if(in_array(\Illuminate\Support\Facades\Auth::user()->email, ['abrahamaguvasu@gmail.com', 'muteshiteddy@gmail.com']))
+                        <button class="btn btn-secondary float-end py-0" data-bs-toggle="modal"
                             data-bs-target="#updateModal" type="button">Update</button>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -59,15 +61,17 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <make-sale purpose="restocking"></make-sale>
+        @if(in_array(\Illuminate\Support\Facades\Auth::user()->email, ['abrahamaguvasu@gmail.com', 'muteshiteddy@gmail.com']))
+            <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body p-0">
+                            <make-sale purpose="restocking"></make-sale>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 @endsection
