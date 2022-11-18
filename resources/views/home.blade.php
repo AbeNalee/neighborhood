@@ -3,27 +3,37 @@
 @section('content')
 <div class="container">
     <div class="row my-2 text-center">
-        <div class="col-4">
+        <div class="col-6 col-lg-3 my-1">
             <div class="card card-body bg-success bg-opacity-25">
                 <h4>{{ $sales = \App\Models\Cart::totalSales() }}</h4>
                 <small>sold</small>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-6 col-lg-3 my-1">
             <div class="card card-body bg-warning bg-opacity-25">
                 <h4>{{ $spend = abs(\App\Models\Cart::totalSpent()) }}</h4>
                 <small>spent</small>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-6 col-lg-3 my-1">
             <div class="card card-body bg-info bg-opacity-25">
                 <h4>{{ $sales - $spend }}</h4>
                 <small>profit</small>
             </div>
         </div>
+        <div class="col-6 col-lg-3 my-1">
+            <div class="card card-body bg-primary bg-opacity-25">
+                <h4>{{ \App\Models\Product::all()->sum('value') }}</h4>
+                <small>in stock</small>
+            </div>
+        </div>
     </div>
+    <hr>
     <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-12 col-lg-6 my-1">
+            <make-sale purpose="purchase"></make-sale>
+        </div>
+        <div class="col-12 col-lg-6 my-1">
             <div class="card">
                 <div class="card-header">
                     <span class="">Low Stock (lt 5)</span>
@@ -48,9 +58,6 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="col-6">
-            <make-sale purpose="purchase"></make-sale>
         </div>
         <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">

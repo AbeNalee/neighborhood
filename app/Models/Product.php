@@ -28,6 +28,11 @@ class Product extends Model
         return $this->sell_price - $this->buy_price;
     }
 
+    public function getValueAttribute()
+    {
+        return $this->sell_price * $this->stock;
+    }
+
     /*
      * Queries
      */

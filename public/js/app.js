@@ -5568,7 +5568,9 @@ Vue.component('make-sale', (__webpack_require__(/*! ./components/Transact.vue */
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+Vue.config.devtools = false;
+Vue.config.debug = false;
+Vue.config.silent = false;
 var app = new Vue({
   el: '#app'
 });
@@ -28706,7 +28708,11 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-header" }, [
-      _vm._v("\n        Make Sale\n        "),
+      _vm._v(
+        "\n        " +
+          _vm._s(_vm.purpose === "purchase" ? "Make Sale" : "Update Stock") +
+          "\n        "
+      ),
       _c("span", { staticClass: "bg-info float-end py-0 px-2 rounded" }, [
         _vm._v("Ksh. " + _vm._s(_vm.amount)),
       ]),

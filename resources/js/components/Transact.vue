@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            Make Sale
+            {{ purpose === 'purchase' ? 'Make Sale' : 'Update Stock' }}
             <span class="bg-info float-end py-0 px-2 rounded">Ksh. {{ amount }}</span>
         </div>
         <div class="card-body">
