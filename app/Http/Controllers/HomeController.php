@@ -29,9 +29,14 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $data = Product::select("name", "sell_price", "id", "stock", "buy_price")
+        $data = Product::join('stock_controls', function ($join) use($request) {
+            $join->on('products.id', '=', 'stock_controls.product_id');
+            if ($request->has('sale') &&    $request->query('sale')) {
+                $join->where('stock_controls.stock_count', '>', 0);
+            }
+        })
+            ->select("name", "sell_price", "products.id", "stock_count", "buy_price")
             ->where("name","LIKE","%{$request->query('query')}%")
-            ->isInStock()
             ->get();
 
         return response()->json($data);

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\StockControl;
 use Illuminate\Database\Seeder;
 
 class ProductsSeeder extends Seeder
@@ -408,7 +409,16 @@ class ProductsSeeder extends Seeder
         ];
 
         foreach ($products as $product) {
-            Product::create($product);
+            $p = Product::create([
+                'name' => $product['name'],
+                'sell_price' => $product['sell_price']
+            ]);
+
+            StockControl::create([
+                'stock_count' => rand(0, 15),
+                'product_id' => $p->id,
+                'buy_price' => $product['buy_price'],
+            ]);
         }
     }
 }

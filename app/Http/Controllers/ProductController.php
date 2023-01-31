@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\StockControl;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class ProductController extends Controller
 {
@@ -16,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return View::make('products.index');
     }
 
     /**
@@ -33,11 +35,58 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $purchase = Purchase::create([
+            'purpose' => 'restocking'
+        ]);
+        $cart = Cart::create([
+            'value' => -1 * abs((int)$request->quantity * (int)$request->buy_price),
+            'purchase_id' => $purchase->id
+        ]);
+        $size = $this->formatSize(strtoupper($request->size));
+        $product = Product::firstOrCreate([
+            'name' => $request->name . " " . $size,
+            'alcoholic' => $request->alcoholic,
+        ],[
+            'sell_price' => $request->sell_price
+        ]);
+
+        $product->carts()
+            ->attach($cart->id, [
+                'quantity' => (int)$request->quantity
+            ]);
+
+        $stock = $product->stocks()->where('buy_price', $request->buy_price)->first();
+
+        if (isset($stock)) {
+            $stock->stock_count += $request->quantity;
+            $stock->save();
+        } else {
+            $product->stocks()->create([
+                'product_id' => $product->id,
+                'buy_price' => $request->buy_price,
+                'stock_count' => $request->quantity,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success'
+        ]);
+    }
+
+    public function formatSize($size)
+    {
+        if (str_contains($size, 'ML')) {
+            return $this->formatSize(substr_replace($size, '', -2));
+        } else {
+            if((int) $size > 999) {
+                return $size/1000 . "L";
+            }
+            return $size . "ML";
+        }
     }
 
     /**
@@ -96,23 +145,39 @@ class ProductController extends Controller
         ]);
         foreach ($request->items as $item){
             //create cart relationship
-            if ($request->purpose == 'purchase') {
-                $quantity = - (int) $item['quantity'];
-            } else {
-                $quantity = (int) $item['quantity'];
-            }
+            $quantity = (int) $item['quantity'];
+
             $product = Product::find($item['id']);
             $product->carts()
                 ->attach($cart->id, [
-                    'quantity' => $quantity
+                    'quantity' => -1 * $quantity
                 ]);
 
-            $product->stock += $quantity;
-            $product->save();
+            $stocks = $product->stocks()->where('stock_count', '>', 0)->oldest()->get();
+            $this->reduceStock($stocks, $quantity);
         }
 
         return response()->json([
             'status' => 'success'
         ]);
+    }
+
+    function reduceStock($stocks, $quantity)
+    {
+        for ($i = 0; $i < count($stocks); $i++) {
+            if ($quantity == 0) {
+                break;
+            }
+            $count = $stocks[$i]->stock_count;
+            if ($quantity >= $count) {
+                $quantity -= $count;
+                $stocks[$i]->stock_count = 0;
+                $stocks[$i]->save();
+            } else {
+                $stocks[$i]->stock_count -= $quantity;
+                $stocks[$i]->save();
+                $quantity = 0;
+            }
+        }
     }
 }

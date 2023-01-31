@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" :key="key">
         <div class="card-header">
             {{ purpose === 'purchase' ? 'Make Sale' : 'Update Stock' }}
             <span class="bg-info float-end py-0 px-2 rounded">Ksh. {{ amount }}</span>
@@ -25,6 +25,7 @@ export default {
             items: [],
             count: 1,
             amount: 0,
+            key: 1,
         }
     },
     methods: {
@@ -40,9 +41,11 @@ export default {
                 purpose: this.purpose
             }).then(r => {
                 if (r.data.status === 'success') {
-                    alert('purchase completed and stocks updated');
+                    this.$swal('purchase completed and stocks updated');
                     this.items = [];
                     this.count = 1;
+                    this.key += 1;
+                    this.amount = 0;
                 }
             })
         }

@@ -18,9 +18,14 @@ class Product extends Model
     /*
      * Attributes
      */
+    public function getStockCountAttribute()
+    {
+        return $this->stocks()->sum('stock_count');
+    }
+
     public function getIsInStockAttribute()
     {
-        return $this->stock > 0;
+        return $this->stock_count > 0;
     }
 
     public function getProfitMarginAttribute()
@@ -30,7 +35,7 @@ class Product extends Model
 
     public function getValueAttribute()
     {
-        return $this->sell_price * $this->stock;
+        return $this->sell_price * $this->stock_count;
     }
 
     /*
@@ -38,7 +43,7 @@ class Product extends Model
      */
     public function scopeLowStock($query)
     {
-        return $query->where('stock', '<', 5);
+        return $query->get()->where('stock_count', '<', 5);
     }
 
     public function scopeIsInStock($query)
@@ -59,5 +64,10 @@ class Product extends Model
         return $this->belongsToMany(Cart::class, 'cart_items')
             ->using(CartItem::class)
             ->withTimestamps();
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(StockControl::class);
     }
 }

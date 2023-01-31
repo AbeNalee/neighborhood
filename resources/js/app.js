@@ -5,8 +5,11 @@
  */
 
 require('./bootstrap');
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 window.Vue = require('vue').default;
+Vue.use(VueSweetalert2);
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,14 +24,15 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('make-sale', require('./components/Transact.vue').default);
+Vue.component('add-item', require('./components/AddItem.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-Vue.config.devtools = false;
-Vue.config.debug = false;
+Vue.config.devtools = true;
+Vue.config.debug = true;
 Vue.config.silent = false;
 const app = new Vue({
     el: '#app',

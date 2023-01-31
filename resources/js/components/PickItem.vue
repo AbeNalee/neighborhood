@@ -21,8 +21,11 @@
                 </div>
             </div>
             <div class="col-lg-2" v-if="item !== null">
-                <input id="qtyInput" type="number" class="form-floating form-control mb-3"
-                       v-model="quantity" :max="item.stock" min="1">
+                <div class="form-floating">
+                    <input type="number" class="form-control" id="quantity" min="1"
+                           v-model="quantity" :max="item.stock_count">
+                    <label for="quantity">Quantity</label>
+                </div>
             </div>
             <div v-if="canAdd">
                 <button class="btn btn-primary" @click="addItem">Add</button>
@@ -51,7 +54,7 @@ export default {
         searchItem: async function () {
             this.searchResults = [];
             if (this.searchTerm.length > 2) {
-                await axios.get('/search', {params: {query: this.searchTerm}})
+                await axios.get('/search', {params: {query: this.searchTerm, sale: this.purpose === 'purchase'}})
                     .then(r => {
                         this.searchResults = r.data;
                     })
@@ -64,6 +67,12 @@ export default {
             this.canAdd = true;
         },
         addItem: function () {
+            if (parseInt(this.quantity) > parseInt(this.item.stock_count)) {
+                return this.$swal({
+                    icon: 'error',
+                    text: 'Quantity picked cannot be more than the available stock'
+                })
+            }
             this.amount = this.purpose === 'purchase' ? (this.item.sell_price * this.quantity) : (this.item.buy_price * this.quantity);
             this.$set(this.item, 'quantity', parseInt(this.quantity));
             this.$set(this.item, 'amount', parseInt(this.amount));

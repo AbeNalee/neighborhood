@@ -22,7 +22,7 @@
             </a>
         </div>
         <div class="col-6 col-lg-3 my-1">
-            <a class="card card-body bg-primary bg-opacity-25 btn">
+            <a class="card card-body bg-primary bg-opacity-25 btn" href="{{ route('stock.index') }}">
                 <h4>{{ \App\Models\Product::all()->sum('value') }}</h4>
                 <small>in stock</small>
             </a>
@@ -44,14 +44,14 @@
 
                     <div class="card-body">
                         <ul class="list px-2">
-                            @foreach(\App\Models\Product::lowStock()->get() as $product)
+                            @foreach(\App\Models\Product::lowStock() as $product)
                                 <li class="list-group-item">
                                     <h3 class="form-control">
                                         {{ $product->name }}
                                         <span class="fw-bold float-end px-2 rounded {{
-                                          $product->stock > 2 ? "bg-warning":
-                                          "bg-danger" }}">
-                                        {{ $product->stock }}
+                                          $product->stock_count > 10 ? "bg-success": ($product->stock_count > 2 ?
+                                          "bg-warning" : "bg-danger") }}">
+                                        {{ $product->stock_count }}
                                     </span>
                                     </h3>
                                 </li>
@@ -64,7 +64,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body p-0">
-                            <make-sale purpose="restocking"></make-sale>
+                            <add-item></add-item>
                         </div>
                     </div>
                 </div>
