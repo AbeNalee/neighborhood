@@ -25,8 +25,18 @@
                                             </span>
                                         </h3>
                                     </div>
-                                    <div class="col-5">
-
+                                    <div class="col-4">
+                                        <button class="btn btn-secondary py-0" data-bs-toggle="modal"
+                                                data-bs-target="{{ '#reduce' . $product->id }}" type="button">Reduce Stock</button>
+                                        <div class="modal fade" id="{{ 'reduce' . $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-body p-0">
+                                                        <reduce-stock :product="{{ $product }}"></reduce-stock>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                             @endforeach

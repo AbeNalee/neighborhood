@@ -98,7 +98,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Product $stock)
     {
         //
     }
@@ -109,7 +109,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Product $stock)
     {
         //
     }
@@ -121,9 +121,9 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $stock)
     {
-        $stocks = $product->stocks()->where('stock_count', '>', 0)->latest()->get();
+        $stocks = $stock->stocks()->where('stock_count', '>', 0)->oldest()->get();
         $this->reduceStock($stocks, $request->quantity);
 
         return response()->json([
@@ -137,7 +137,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $stock)
     {
         //
     }

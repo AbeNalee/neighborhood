@@ -1,5 +1,8 @@
 <template>
     <div class="card">
+        <div class="card-header">
+            <h3>Reduce {{ product.name }}</h3>
+        </div>
         <div class="card-body">
             <div class="form-floating col-lg-5">
                 <input type="text" class="form-control" :id="'qty'+ product.id" min="1"
@@ -26,10 +29,20 @@ export default {
     methods: {
         reduceStock() {
             this.$swal({
-                icon: "warning"
+                icon: "warning",
+                text: "This action will reduce the stock. Are you sure you wish to proceed?",
+                showDenyButton: true,
+                confirmButtonText: 'Yes',
+                denyButtonText: 'No',
+                customClass: {
+                    actions: 'my-actions',
+                    confirmButton: 'order-2',
+                    denyButton: 'order-3',
+                }
             }).then((v) => {
-                if (v === true) {
+                if (v.isConfirmed) {
                     axios.post('/stock/' + this.product.id, {
+                        _method: 'put',
                         quantity: this.quantity
                     }).then(r => {
                         this.quantity = null;
@@ -43,5 +56,12 @@ export default {
 </script>
 
 <style scoped>
+.my-actions { margin: 0 2em; }
+.order-1 { order: 1; }
+.order-2 { order: 2; }
+.order-3 { order: 3; }
 
+.right-gap {
+    margin-right: auto;
+}
 </style>

@@ -25,6 +25,7 @@ Vue.use(VueSweetalert2);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('make-sale', require('./components/Transact.vue').default);
 Vue.component('add-item', require('./components/AddItem.vue').default);
+Vue.component('reduce-stock', require('./components/UpdateStock.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
