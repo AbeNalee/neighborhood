@@ -48,7 +48,7 @@ class ProductController extends Controller
         ]);
         $size = $this->formatSize(strtoupper($request->size));
         $product = Product::firstOrCreate([
-            'name' => $request->name . " " . $size,
+            'name' => strtoupper($request->name) . " " . $size,
             'alcoholic' => $request->alcoholic,
         ],[
             'sell_price' => $request->sell_price
