@@ -5395,7 +5395,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       quantity: 1,
       newSpend: null,
       size: null,
-      key: 0,
       alcoholic: true
     };
   },
@@ -5457,9 +5456,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         quantity: this.quantity,
         alcoholic: this.alcoholic
       }).then(function (r) {
-        _this2.key += 1;
-        _this2.$forceUpdate();
         _this2.$swal("added successfully");
+        _this2.searchTerm = null;
+        _this2.size = null;
+        _this2.buyPrice = null;
+        _this2.sellPrice = null;
+        _this2.quantity = null;
+        _this2.newSpend = null;
       });
     }
   },
@@ -29191,7 +29194,7 @@ var render = function () {
       _vm._v("\n        Add To Stock\n    "),
     ]),
     _vm._v(" "),
-    _c("div", { key: _vm.key, staticClass: "card-body" }, [
+    _c("div", { staticClass: "card-body" }, [
       _c("div", { staticClass: "row mb-3" }, [
         _c("div", { staticClass: "form-floating col-lg-7" }, [
           _c("input", {

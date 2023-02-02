@@ -48,7 +48,7 @@ class ProductController extends Controller
         ]);
         $size = $this->formatSize(strtoupper($request->size));
         $product = Product::firstOrCreate([
-            'name' => strtoupper($request->name) . " " . $size,
+            'name' => strtoupper($request->name) . $size,
             'alcoholic' => $request->alcoholic,
         ],[
             'sell_price' => $request->sell_price
@@ -82,10 +82,13 @@ class ProductController extends Controller
         if (str_contains($size, 'ML')) {
             return $this->formatSize(substr_replace($size, '', -2));
         } else {
-            if((int) $size > 999) {
-                return $size/1000 . "L";
+            if((int)$size == 0 || $size == null) {
+                return null;
             }
-            return $size . "ML";
+            if((int) $size > 999) {
+                return " " . $size/1000 . "L";
+            }
+            return " " . $size . "ML";
         }
     }
 
@@ -116,11 +119,16 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $stocks = $product->stocks()->where('stock_count', '>', 0)->latest()->get();
+        $this->reduceStock($stocks, $request->quantity);
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**

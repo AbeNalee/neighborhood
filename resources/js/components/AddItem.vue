@@ -3,7 +3,7 @@
         <div class="card-header">
             Add To Stock
         </div>
-        <div class="card-body" :key="key">
+        <div class="card-body">
             <div class="row mb-3">
                 <div class="form-floating col-lg-7">
                     <input type="text" class="form-control" id="itemInput"
@@ -76,7 +76,6 @@ export default {
             quantity: 1,
             newSpend: null,
             size: null,
-            key: 0,
             alcoholic: true,
         }
     },
@@ -114,9 +113,13 @@ export default {
                 quantity: this.quantity,
                 alcoholic: this.alcoholic,
             }).then(r => {
-                this.key += 1;
-                this.$forceUpdate();
                 this.$swal("added successfully");
+                this.searchTerm = null;
+                this.size = null;
+                this.buyPrice = null;
+                this.sellPrice = null;
+                this.quantity = null;
+                this.newSpend = null;
             })
         }
     },

@@ -18,12 +18,15 @@
                                     <div class="col-7">
                                         <h3 class="form-control">
                                             {{ $product->name }}
-                                            <span class="fw-bold float-end px-2 rounded {{
-                                          $product->stock_count > 10 ? "bg-success": ($product->stock_count > 2 ?
-                                          "bg-warning" : "bg-danger") }}">
-                                        {{ $product->stock_count }}
-                                    </span>
+                                            <span class="fw-bold float-end px-2 rounded
+                                            {{$product->stock_count > 10 ? "bg-success": ($product->stock_count > 2 ?
+                                                "bg-warning" : "bg-danger") }}">
+                                                {{ $product->stock_count }}
+                                            </span>
                                         </h3>
+                                    </div>
+                                    <div class="col-5">
+
                                     </div>
                                 </li>
                             @endforeach
