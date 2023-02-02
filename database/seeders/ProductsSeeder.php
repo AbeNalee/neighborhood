@@ -20,7 +20,7 @@ class ProductsSeeder extends Seeder
             [ 'name' => 'GILBEYS 750ML',
                 'buy_price'=> 1213,
                 'sell_price'=> 1600,
-                'stock'=> 9 ],
+                'stock'=> 5 ],
             [ 'name' => 'GILBEYS 350ML',
                 'buy_price'=> 585,
                 'sell_price'=> 800,
