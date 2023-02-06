@@ -13,6 +13,8 @@ class CartItem extends Pivot
         'cart_id', 'product_id', 'quantity'
     ];
 
+    protected $table = 'cart_items';
+
     public function cart()
     {
         return $this->belongsTo(Cart::class);

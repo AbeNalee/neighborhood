@@ -123,6 +123,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $stock)
     {
+        $cartItems = $stock->cartItems;
+        $this->clearCarts($cartItems, $request->quantity);
         $stocks = $stock->stocks()->where('stock_count', '>', 0)->oldest()->get();
         $this->reduceStock($stocks, $request->quantity);
 
@@ -185,6 +187,35 @@ class ProductController extends Controller
                 $stocks[$i]->stock_count -= $quantity;
                 $stocks[$i]->save();
                 $quantity = 0;
+            }
+        }
+    }
+
+    function clearCarts($cartItems, $quantity)
+    {
+        for ($i = 0; $i < count($cartItems); $i++) {
+            if ($quantity == 0) {
+                break;
+            }
+            $count = $cartItems[$i]->quantity;
+            if ($quantity >= $count) {
+                $quantity -= $count;
+                $reducedBy = $cartItems[$i]->quantity;
+                $cartItems[$i]->quantity = 0;
+                $cartItems[$i]->save();
+            } else {
+                $cartItems[$i]->quantity -= $quantity;
+                $cartItems[$i]->save();
+                $quantity = 0;
+                $reducedBy = $quantity;
+            }
+
+            $cart = $cartItems[$i]->cart;
+            //get cartItem value (quantity * sell/buy price)
+            if ($cart->purchase->purpose == 'restocking') {
+                $stock = $cartItems[$i]->product->stocks()->where('stock_count', '>', 0)->first();
+                $cart->value += $reducedBy * $stock->buy_price;
+                $cart->save();
             }
         }
     }

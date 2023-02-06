@@ -12,7 +12,7 @@
         </div>
         <div class="col-6 col-lg-3 my-1">
             <a class="card card-body bg-warning bg-opacity-25 btn">
-                <h4>{{ $spend = abs(\App\Models\Product::all()->sum('expenditure')) }}</h4>
+                <h4>{{ $spend = abs(\App\Models\Cart::totalSpent()) }}</h4>
                 <small>spent</small>
             </a>
         </div>

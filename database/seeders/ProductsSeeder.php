@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Purchase;
 use App\Models\StockControl;
 use Illuminate\Database\Seeder;
 
@@ -413,12 +415,24 @@ class ProductsSeeder extends Seeder
                 'name' => $product['name'],
                 'sell_price' => $product['sell_price']
             ]);
-
-            StockControl::create([
+            $stock = StockControl::create([
                 'stock_count' => rand(0, 15),
                 'product_id' => $p->id,
                 'buy_price' => $product['buy_price'],
             ]);
+            $purchase = Purchase::create([
+                'purpose' => 'restocking'
+            ]);
+            $cart = Cart::create([
+                'value' => -1 * abs((int)$stock->stock_count * (int)$stock->buy_price),
+                'purchase_id' => $purchase->id
+            ]);
+
+            $p->carts()
+                ->attach($cart->id, [
+                    'quantity' => (int)$stock->stock_count
+                ]);
+
         }
     }
 }

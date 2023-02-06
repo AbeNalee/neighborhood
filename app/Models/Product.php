@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'buy_price', 'sell_price', 'stock', 'alcoholic'
+        'name', 'description', 'sell_price', 'alcoholic'
     ];
 
     public $incrementing = true;
@@ -69,6 +69,11 @@ class Product extends Model
         return $this->belongsToMany(Cart::class, 'cart_items')
             ->using(CartItem::class)
             ->withTimestamps();
+    }
+
+    public function CartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 
     public function stocks()

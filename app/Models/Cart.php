@@ -25,6 +25,11 @@ class Cart extends Model
             ->withTimestamps();
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     public function scopeTotalSales($q)
     {
         return $q->where('value', '>', 0)->sum('value');
