@@ -22,11 +22,11 @@
                             </label>
                         </th>
                         <th scope="col">Name</th>
-                        <th scope="col">Highest Buy Price</th>
-                        <th scope="col">Selling Price</th>
-                        <th scope="col">Profit</th>
+                        <th scope="col">Highest Buy Price(Ksh)</th>
+                        <th scope="col">Selling Price(Ksh)</th>
+                        <th scope="col">Profit(Ksh)</th>
                         <th scope="col">Stock Count</th>
-                        <th scope="col">Value</th>
+                        <th scope="col">Value(Ksh)</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -76,6 +76,20 @@
 
                         </tr>
                     @endforeach
+                    <tr>
+                        <td></td>
+                        <td>
+                            <h1>
+                                TOTALS
+                            </h1>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

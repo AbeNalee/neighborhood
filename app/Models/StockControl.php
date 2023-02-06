@@ -13,6 +13,14 @@ class StockControl extends Model
         'product_id', 'stock_count', 'buy_price'
     ];
 
+    /*
+     * Attributes
+     */
+    public function getValueAttribute()
+    {
+        return $this->stock_count * $this->buy_price;
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);

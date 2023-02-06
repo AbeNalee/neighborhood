@@ -38,6 +38,11 @@ class Product extends Model
         return $this->sell_price * $this->stock_count;
     }
 
+    public function getExpenditureAttribute()
+    {
+        return $this->stocks->sum('value');
+    }
+
     /*
      * Queries
      */
