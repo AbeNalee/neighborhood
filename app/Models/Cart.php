@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Cart extends Model
 {
@@ -33,6 +34,11 @@ class Cart extends Model
     public function scopeTotalSales($q)
     {
         return $q->where('value', '>', 0)->sum('value');
+    }
+
+    public function scopeTotalSalesToday($q)
+    {
+        return $q->where('value', '>', 0)->whereDate('created_at', Carbon::today());
     }
 
     public function scopeTotalSpent($q)

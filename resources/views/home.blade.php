@@ -30,6 +30,14 @@
         </div>
     </div>
     @endif
+    <div class="row my-2 text-center">
+        <div class="col-6 col-lg-3 my-1">
+            <a class="card card-body bg-success bg-opacity-25 btn">
+                <h4>{{ $sales = \App\Models\Cart::totalSalesToday() }}</h4>
+                <small>Sales Today</small>
+            </a>
+        </div>
+    </div>
     <hr>
     <div class="row justify-content-center">
         <div class="col-12 col-lg-6 my-1">
