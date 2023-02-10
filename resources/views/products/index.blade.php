@@ -61,13 +61,26 @@
                             </td>
                             <td>{{ $product->value }}</td>
                             <td>
-                                <button class="btn btn-secondary py-0 more" data-bs-toggle="modal"
-                                        data-bs-target="{{ '#reduce' . $product->id }}" type="button">Reduce Stock</button>
+                                <button class="btn btn-secondary mx-1 py-0 more" data-bs-toggle="modal"
+                                        data-bs-target="{{ '#reduce' . $product->id }}" type="button">Reduce</button>
+                                <button class="btn btn-secondary mx-1 py-0 more" data-bs-toggle="modal"
+                                        data-bs-target="{{ '#add' . $product->id }}" type="button">
+                                    Add
+                                </button>
                                 <div class="modal fade" id="{{ 'reduce' . $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-body p-0">
-                                                <reduce-stock :product="{{ $product }}"></reduce-stock>
+                                                <reduce-stock purpose="reduce" :product="{{ $product }}"></reduce-stock>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="{{ 'add' . $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body p-0">
+                                                <reduce-stock purpose="add" :product="{{ $product }}"></reduce-stock>
                                             </div>
                                         </div>
                                     </div>

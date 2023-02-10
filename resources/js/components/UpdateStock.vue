@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3>Reduce {{ product.name }}</h3>
+            <h3>{{purpose.toUpperCase() + " " + product.name }}</h3>
         </div>
         <div class="card-body">
             <div class="form-floating col-lg-5">
@@ -11,7 +11,8 @@
             </div>
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary" @click="reduceStock()">Reduce</button>
+            <span class="btn btn-secondary" v-if="processing">Processing....</span>
+            <button class="btn btn-primary" @click="reduceStock()" v-else>{{ purpose }}</button>
         </div>
     </div>
 </template>
@@ -19,18 +20,19 @@
 <script>
 export default {
     props: [
-        'product'
+        'product', 'purpose'
     ],
     data() {
         return {
             quantity: null,
+            processing: false,
         }
     },
     methods: {
         reduceStock() {
             this.$swal({
                 icon: "warning",
-                text: "This action will reduce the stock. Are you sure you wish to proceed?",
+                text: "This action will " + this.purpose + " the stock. Are you sure you wish to proceed?",
                 showDenyButton: true,
                 confirmButtonText: 'Yes',
                 denyButtonText: 'No',
@@ -41,11 +43,14 @@ export default {
                 }
             }).then((v) => {
                 if (v.isConfirmed) {
+                    this.processing = true;
                     axios.post('/stock/' + this.product.id, {
                         _method: 'put',
-                        quantity: this.quantity
+                        quantity: this.quantity,
+                        purpose: this.purpose,
                     }).then(r => {
                         this.quantity = null;
+                        this.processing = false;
                         this.$swal("Stock has been updated")
                     })
                 }

@@ -8,7 +8,8 @@
             <pick-item :purpose="purpose" v-on:add-item="addItem" v-for="num in count" :key="num"></pick-item>
         </div>
         <div class="card-footer" v-if="items.length">
-            <button class="btn btn-primary" @click="doTransact">Complete</button>
+            <span class="btn btn-secondary" v-if="processing">Processing....</span>
+            <button class="btn btn-primary" @click="doTransact" v-else>Complete</button>
         </div>
     </div>
 </template>
@@ -26,6 +27,7 @@ export default {
             count: 1,
             amount: 0,
             key: 1,
+            processing: false,
         }
     },
     methods: {
@@ -35,6 +37,7 @@ export default {
             this.count++;
         },
         doTransact: async function() {
+            this.processing = true;
             await axios.post('/transact', {
                 items: this.items,
                 amount: this.amount,
@@ -46,6 +49,7 @@ export default {
                     this.count = 1;
                     this.key += 1;
                     this.amount = 0;
+                    this.processing = false
                 }
             })
         }

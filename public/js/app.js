@@ -5383,6 +5383,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -5395,7 +5396,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       quantity: 1,
       newSpend: null,
       size: null,
-      alcoholic: true
+      alcoholic: true,
+      processing: false
     };
   },
   methods: {
@@ -5448,6 +5450,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           text: 'You are missing important information'
         });
       }
+      this.processing = true;
       axios.post('/stock', {
         name: this.searchTerm,
         size: this.size,
@@ -5463,6 +5466,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this2.sellPrice = null;
         _this2.quantity = null;
         _this2.newSpend = null;
+        _this2.processing = false;
       });
     }
   },
@@ -5668,6 +5672,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5680,7 +5685,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       items: [],
       count: 1,
       amount: 0,
-      key: 1
+      key: 1,
+      processing: false
     };
   },
   methods: {
@@ -5696,7 +5702,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                this.processing = true;
+                _context.next = 3;
                 return axios.post('/transact', {
                   items: this.items,
                   amount: this.amount,
@@ -5708,9 +5715,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.count = 1;
                     _this.key += 1;
                     _this.amount = 0;
+                    _this.processing = false;
                   }
                 });
-              case 2:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -5756,12 +5764,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['product'],
+  props: ['product', 'purpose'],
   data: function data() {
     return {
-      quantity: null
+      quantity: null,
+      processing: false
     };
   },
   methods: {
@@ -5769,7 +5779,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
       this.$swal({
         icon: "warning",
-        text: "This action will reduce the stock. Are you sure you wish to proceed?",
+        text: "This action will " + this.purpose + " the stock. Are you sure you wish to proceed?",
         showDenyButton: true,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
@@ -5780,11 +5790,14 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (v) {
         if (v.isConfirmed) {
+          _this.processing = true;
           axios.post('/stock/' + _this.product.id, {
             _method: 'put',
-            quantity: _this.quantity
+            quantity: _this.quantity,
+            purpose: _this.purpose
           }).then(function (r) {
             _this.quantity = null;
+            _this.processing = false;
             _this.$swal("Stock has been updated");
           });
         }
@@ -29644,18 +29657,22 @@ var render = function () {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          on: {
-            click: function ($event) {
-              return _vm.addItem()
+      _vm.processing
+        ? _c("span", { staticClass: "btn btn-secondary" }, [
+            _vm._v("Processing...."),
+          ])
+        : _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              on: {
+                click: function ($event) {
+                  return _vm.addItem()
+                },
+              },
             },
-          },
-        },
-        [_vm._v("Complete")]
-      ),
+            [_vm._v("Complete")]
+          ),
     ]),
   ])
 }
@@ -29926,11 +29943,18 @@ var render = function () {
     _vm._v(" "),
     _vm.items.length
       ? _c("div", { staticClass: "card-footer" }, [
-          _c(
-            "button",
-            { staticClass: "btn btn-primary", on: { click: _vm.doTransact } },
-            [_vm._v("Complete")]
-          ),
+          _vm.processing
+            ? _c("span", { staticClass: "btn btn-secondary" }, [
+                _vm._v("Processing...."),
+              ])
+            : _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: { click: _vm.doTransact },
+                },
+                [_vm._v("Complete")]
+              ),
         ])
       : _vm._e(),
   ])
@@ -29960,7 +29984,9 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-header" }, [
-      _c("h3", [_vm._v("Reduce " + _vm._s(_vm.product.name))]),
+      _c("h3", [
+        _vm._v(_vm._s(_vm.purpose.toUpperCase() + " " + _vm.product.name)),
+      ]),
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
@@ -29994,18 +30020,22 @@ var render = function () {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          on: {
-            click: function ($event) {
-              return _vm.reduceStock()
+      _vm.processing
+        ? _c("span", { staticClass: "btn btn-secondary" }, [
+            _vm._v("Processing...."),
+          ])
+        : _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              on: {
+                click: function ($event) {
+                  return _vm.reduceStock()
+                },
+              },
             },
-          },
-        },
-        [_vm._v("Reduce")]
-      ),
+            [_vm._v(_vm._s(_vm.purpose))]
+          ),
     ]),
   ])
 }

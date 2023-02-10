@@ -123,10 +123,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $stock)
     {
-        $cartItems = $stock->cartItems;
-        $this->clearCarts($cartItems, $request->quantity);
-        $stocks = $stock->stocks()->where('stock_count', '>', 0)->oldest()->get();
-        $this->reduceStock($stocks, $request->quantity);
+        if ($request->purpose == 'add') {
+            $stockControl = $stock->stocks()->latest()->first();
+            $purchase = Purchase::create([
+                'purpose' => 'restocking'
+            ]);
+            $cart = Cart::create([
+                'value' => -1 * abs((int)$request->quantity * (int)$stockControl->buy_price),
+                'purchase_id' => $purchase->id
+            ]);
+            $stock->carts()
+                ->attach($cart->id, [
+                    'quantity' => (int)$request->quantity
+                ]);
+            $stockControl->stock_count += $request->quantity;
+            $stockControl->save();
+        } else {
+            $cartItems = $stock->cartItems;
+            $this->clearCarts($cartItems, $request->quantity);
+            $stocks = $stock->stocks()->where('stock_count', '>', 0)->oldest()->get();
+            $this->reduceStock($stocks, $request->quantity);
+        }
 
         return response()->json([
             'status' => 'success'

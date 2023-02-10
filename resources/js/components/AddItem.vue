@@ -59,7 +59,8 @@
             </div>
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary" @click="addItem()">Complete</button>
+            <span class="btn btn-secondary" v-if="processing">Processing....</span>
+            <button class="btn btn-primary" @click="addItem()" v-else>Complete</button>
         </div>
     </div>
 </template>
@@ -77,6 +78,7 @@ export default {
             newSpend: null,
             size: null,
             alcoholic: true,
+            processing: false,
         }
     },
     methods: {
@@ -105,6 +107,7 @@ export default {
                     text: 'You are missing important information'
                 })
             }
+            this.processing = true;
             axios.post('/stock', {
                 name: this.searchTerm,
                 size: this.size,
@@ -120,6 +123,7 @@ export default {
                 this.sellPrice = null;
                 this.quantity = null;
                 this.newSpend = null;
+                this.processing = false;
             })
         }
     },
