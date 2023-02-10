@@ -38,7 +38,7 @@ class Cart extends Model
 
     public function scopeTotalSalesToday($q)
     {
-        return $q->where('value', '>', 0)->whereDate('created_at', Carbon::today());
+        return $q->where('value', '>', 0)->whereDate('created_at', Carbon::today())->sum('value');
     }
 
     public function scopeTotalSpent($q)
