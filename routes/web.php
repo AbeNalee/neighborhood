@@ -19,4 +19,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('home.search');
     Route::post('/transact', [\App\Http\Controllers\ProductController::class, 'transact'])->name('product.purchase');
     Route::resource('stock', 'ProductController');
+    Route::get('/reset-sold', [\App\Http\Controllers\StockControlController::class, 'clearSold']);
 });
