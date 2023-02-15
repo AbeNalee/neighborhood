@@ -31,7 +31,11 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <?php
+                        $sumValue = 0;
+                    ?>
                     @foreach(\App\Models\Product::all() as $product)
+                        <?php $sumValue += $product->value?>
                         <tr scope="row">
                             <td>
                                 <label class="control control--checkbox">
@@ -96,11 +100,13 @@
                                 TOTALS
                             </h1>
                         </td>
+                        <td>
+                            Spent:
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $sumValue }}</td>
                         <td></td>
                     </tr>
                     </tbody>
