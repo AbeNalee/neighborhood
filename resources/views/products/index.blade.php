@@ -33,9 +33,10 @@
                     <tbody>
                     <?php
                         $sumValue = 0;
+                        $spent = 0;
+                        $profit = 0;
                     ?>
                     @foreach(\App\Models\Product::all() as $product)
-                        <?php $sumValue += $product->value?>
                         <tr scope="row">
                             <td>
                                 <label class="control control--checkbox">
@@ -57,13 +58,14 @@
                                 </div>
                             </td>
                             <td class="px-2 {{ $buy < $product->sell_price ? 'bg-success' : 'bg-danger' }}">
-                                {{ $product->sell_price - $buy }}
+                                {{ $prof = $product->sell_price - $buy }}
                             </td>
                             <td class="px-2 {{$product->stock_count > 10 ? "bg-success": ($product->stock_count > 2 ?
                                                 "bg-warning" : "bg-danger") }}">
                                 {{ $product->stock_count }}
                             </td>
                             <td>{{ $product->value }}</td>
+                                <?php $sumValue += $product->value; $spent += ($buy * $product->stock_count); $profit += ($prof * $product->stock_count);?>
                             <td>
                                 <button class="btn btn-secondary mx-1 py-0 more" data-bs-toggle="modal"
                                         data-bs-target="{{ '#reduce' . $product->id }}" type="button">Reduce</button>
@@ -101,7 +103,7 @@
                             </h1>
                         </td>
                         <td>
-                            Spent:
+                            Spent: {{ $spent }}
                         </td>
                         <td></td>
                         <td></td>
