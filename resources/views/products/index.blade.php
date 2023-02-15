@@ -106,7 +106,7 @@
                             Spent: {{ $spent }}
                         </td>
                         <td></td>
-                        <td></td>
+                        <td>Expected Margin: {{ $profit }}</td>
                         <td></td>
                         <td>{{ $sumValue }}</td>
                         <td></td>
