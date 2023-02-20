@@ -41,6 +41,16 @@ class Cart extends Model
         return $q->where('value', '>', 0)->whereDate('created_at', Carbon::today())->sum('value');
     }
 
+    public function scopeTotalSalesWeek($q)
+    {
+        return $q->where('value', '>', 0)->whereDate('created_at', '>', Carbon::today()->startOfWeek())->sum('value');
+    }
+
+    public function scopeTotalSalesMonth($q)
+    {
+        return $q->where('value', '>', 0)->whereDate('created_at', '>', Carbon::today()->startOfMonth())->sum('value');
+    }
+
     public function scopeTotalSpent($q)
     {
         return $q->where('value', '<', 0)->sum('value');

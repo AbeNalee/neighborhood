@@ -37,7 +37,20 @@
                 <small>Sales Today</small>
             </a>
         </div>
+        <div class="col-6 col-lg-3 my-1">
+            <a class="card card-body bg-success bg-opacity-25 btn">
+                <h4>{{ $salesToday = \App\Models\Cart::totalSalesMonth() }}</h4>
+                <small>Sales This Month</small>
+            </a>
+        </div>
     </div>
+        <div class="row my-2 text-center">
+            <div class="col-6 col-lg-3 my-1">
+                <a class="btn btn-primary bg-opacity-50" href="{{ route('stock.index') }}">
+                    <h4>View Inventory</h4>
+                </a>
+            </div>
+        </div>
     <hr>
     <div class="row justify-content-center">
         <div class="col-12 col-lg-6 my-1">

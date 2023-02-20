@@ -20,6 +20,12 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        .form-floating {
+            margin-top: 2vh;
+            margin-bottom: 2vh;
+        }
+    </style>
 </head>
 <body>
     <div id="app">

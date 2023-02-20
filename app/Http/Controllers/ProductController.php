@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\StockControl;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class ProductController extends Controller
@@ -218,21 +219,26 @@ class ProductController extends Controller
             if ($quantity >= $count) {
                 $quantity -= $count;
                 $reducedBy = $cartItems[$i]->quantity;
-                $cartItems[$i]->quantity = 0;
-                $cartItems[$i]->save();
+                $cartItems[$i]->update([
+                    'quantity' => 0,
+                ]);
             } else {
                 $cartItems[$i]->quantity -= $quantity;
                 $cartItems[$i]->save();
-                $quantity = 0;
                 $reducedBy = $quantity;
+                $quantity = 0;
             }
 
+            Log::info($reducedBy);
             $cart = $cartItems[$i]->cart;
             //get cartItem value (quantity * sell/buy price)
             if ($cart->purchase->purpose == 'restocking') {
                 $stock = $cartItems[$i]->product->stocks()->where('stock_count', '>', 0)->first();
-                $cart->value += $reducedBy * $stock->buy_price;
+                $val = $reducedBy * $stock->buy_price;
+                Log::warning("clearing stock. Cart value is currently $cart->value.\n It will be reduced by $val");
+                $cart->value += $val;
                 $cart->save();
+                Log::warning("cleared stock. Cart value updated to $cart->value");
             }
         }
     }
