@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Product;
 use App\Models\StockControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +99,35 @@ class StockControlController extends Controller
 
                 $cart->purchase()->delete();
                 $cart->delete();
+            }
+
+            return "Done";
+        }
+
+        return "Sorry. you can't do this";
+    }
+
+    public function resetStock()
+    {
+        if (Auth::user()->email == 'abrahamaguvasu@gmail.com') {
+            $carts = Cart::all();
+
+            foreach ($carts as $cart) {
+                $cart->cartItems()->each(function($cartItem) {
+                    $cartItem->delete();
+                });
+
+                $cart->purchase()->delete();
+                $cart->delete();
+            }
+
+            $products = Product::all();
+            foreach ($products as $product) {
+                $product->stocks()->each(function ($stock) {
+                    $stock->update([
+                        'stock_count' => 0
+                    ]);
+                });
             }
 
             return "Done";

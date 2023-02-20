@@ -20,4 +20,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/transact', [\App\Http\Controllers\ProductController::class, 'transact'])->name('product.purchase');
     Route::resource('stock', 'ProductController');
     Route::get('/reset-sold', [\App\Http\Controllers\StockControlController::class, 'clearSold']);
+    Route::get('/reset-stock', [\App\Http\Controllers\StockControlController::class, 'resetStock']);
 });
