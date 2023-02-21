@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UsersSeeder extends Seeder
 {
@@ -39,8 +41,22 @@ class UsersSeeder extends Seeder
             ]
         ];
 
+        $admin = Role::create([
+            'name' => 'admin',
+        ]);
+        $admin->givePermissionTo('');
+
+        $staff = Role::create([
+            'name' => 'staff',
+        ]);
+
         foreach ($users as $user) {
-            User::create($user);
+            $user = User::create($user);
+            if($user->name !== 'Staff 1') {
+                $user->assignRole($admin);
+            } else {
+                $user->assignRole($staff);
+            }
         }
     }
 }

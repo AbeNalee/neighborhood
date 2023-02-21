@@ -11,6 +11,9 @@
             </h2>
 
             <div class="table-responsive">
+                <?php
+                    $hasRole = \Illuminate\Support\Facades\Auth::user()->hasRole('admin');
+                ?>
 
                 <table class="table table-striped custom-table">
                     <thead>
@@ -22,11 +25,11 @@
                             </label>
                         </th>
                         <th scope="col">Name</th>
-                        <th scope="col">Highest Buy Price(Ksh)</th>
+                        @if($hasRole)<th scope="col">Highest Buy Price(Ksh)</th>@endif
                         <th scope="col">Selling Price(Ksh)</th>
-                        <th scope="col">Profit(Ksh)</th>
+                        @if($hasRole)<th scope="col">Profit(Ksh)</th>@endif
                         <th scope="col">Stock Count</th>
-                        <th scope="col">Value(Ksh)</th>
+                        @if($hasRole)<th scope="col">Value(Ksh)</th>@endif
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -47,32 +50,41 @@
                             <td>
                                 {{ $product->name }}
                             </td>
+                            @if($hasRole)
                             <td class="pl-0">
                                 <div class="d-flex align-items-center">
                                     {{ $buy = $product->stocks()->orderBy('buy_price', 'DESC')->first()->buy_price }}
                                 </div>
                             </td>
+                            @endif
                             <td>
                                 <div class="d-flex align-items-center">
                                     {{ $product->sell_price }}
                                 </div>
                             </td>
+                            @if($hasRole)
                             <td class="px-2 {{ $buy < $product->sell_price ? 'bg-success' : 'bg-danger' }}">
                                 {{ $prof = $product->sell_price - $buy }}
                             </td>
+                            @endif
                             <td class="px-2 {{$product->stock_count > 10 ? "bg-success": ($product->stock_count > 2 ?
                                                 "bg-warning" : "bg-danger") }}">
                                 {{ $product->stock_count }}
                             </td>
+                            @if($hasRole)
                             <td>{{ $product->value }}</td>
                                 <?php $sumValue += $product->value; $spent += ($buy * $product->stock_count); $profit += ($prof * $product->stock_count);?>
+                            @endif
                             <td>
+                                @if($hasRole)
                                 <button class="btn btn-secondary mx-1 py-0 more" data-bs-toggle="modal"
                                         data-bs-target="{{ '#reduce' . $product->id }}" type="button">Reduce</button>
+                                @endif
                                 <button class="btn btn-secondary mx-1 py-0 more" data-bs-toggle="modal"
                                         data-bs-target="{{ '#add' . $product->id }}" type="button">
                                     Add
                                 </button>
+                                    @if($hasRole)
                                 <div class="modal fade" id="{{ 'reduce' . $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -82,6 +94,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                    @endif
                                 <div class="modal fade" id="{{ 'add' . $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -95,6 +108,7 @@
 
                         </tr>
                     @endforeach
+                    @if($hasRole)
                     <tr>
                         <td></td>
                         <td>
@@ -111,6 +125,7 @@
                         <td>{{ $sumValue }}</td>
                         <td></td>
                     </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>
