@@ -32,9 +32,10 @@
     @endif
     <div class="row my-2 text-center">
         <div class="col-6 col-lg-3 my-1">
-            <a class="card card-body bg-success bg-opacity-25 btn">
+            <a class="card card-body bg-success bg-opacity-25 btn" href="{{ route('sales.index', ['period' => 'day']) }}">
                 <h4>{{ $salesToday = \App\Models\Cart::totalSalesToday() }}</h4>
                 <small>Sales Today</small>
+                <small class="float-left small link">View Details</small>
             </a>
         </div>
         <div class="col-6 col-lg-3 my-1">
@@ -44,6 +45,7 @@
             </a>
         </div>
     </div>
+        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('staff'))
         <div class="row my-2 text-center">
             <div class="col-6 col-lg-3 my-1">
                 <a class="btn btn-primary bg-opacity-50" href="{{ route('stock.index') }}">
@@ -51,6 +53,7 @@
                 </a>
             </div>
         </div>
+        @endif
     <hr>
     <div class="row justify-content-center">
         <div class="col-12 col-lg-6 my-1">

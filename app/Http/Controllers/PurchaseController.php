@@ -3,18 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class PurchaseController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
-        //
+        //get all sales for a specified period
+        if (\request()->has('period')) {
+            $query = \request()->query('period');
+            if ($query == 'day') {
+                $period = Carbon::yesterday();
+            } else if ($query == 'week') {
+                $period = Carbon::now()->startOfWeek();
+            } else if ($query == 'month') {
+                $period = Carbon::now()->startOfMonth();
+            }
+        } else {
+            $period = Carbon::now()->startOfCentury();
+        }
+        $sales = Purchase::where('purpose', 'purchase')->whereDate('created_at', '>', $period)->with('cart.cartItems')->get();
+//        dd($sales[30]->cart->cartItems);
+
+        return View::make('sales.index', ['sales' => $sales]);
     }
 
     /**
