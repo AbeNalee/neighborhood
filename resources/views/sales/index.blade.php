@@ -73,6 +73,7 @@
                                 </h1>
                             </td>
                             <td></td>
+                            <td></td>
                             <td>{{ $total }}</td>
                             <td></td>
                         </tr>
