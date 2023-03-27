@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -44,6 +45,7 @@ class HomeController extends Controller
 
     public function deploy(Request  $request)
     {
+        Log::info('Webhook initiated.');
         $githubPayload = $request->getContent();
         $githubHash = $request->header('X-Hub-Signature');
         $localToken = env('DEPLOY_SECRET');
@@ -53,6 +55,7 @@ class HomeController extends Controller
             $root_path = base_path();
             $process = new Process(['./deploy.sh'], '/home/liquorco/neighborhood');
             $process->run(function ($type, $buffer) {
+                Log::info($buffer);
                 echo $buffer;
             });
         }
