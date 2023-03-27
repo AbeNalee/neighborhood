@@ -41,14 +41,14 @@
         @if(\Illuminate\Support\Facades\Auth::user()->hasRole('admin'))
         <div class="col-6 col-lg-3 my-1">
             <a class="card card-body bg-success bg-opacity-25 btn h-100">
-                <h4>{{ $salesToday = \App\Models\Cart::totalSalesMonth() }}</h4>
+                <h4>{{ $salesMonth = \App\Models\Cart::totalSalesMonth() }}</h4>
                 <small>Sales This Month</small>
             </a>
         </div>
         @endif
         <div class="col-6 col-lg-3 my-1">
             <a class="card card-body bg-success bg-opacity-25 btn h-100">
-                <h4>{{ $salesToday = \App\Models\Cart::totalSalesWeek() }}</h4>
+                <h4>{{ $salesWeek = \App\Models\Cart::totalSalesWeek() }}</h4>
                 <small>Sales This Week</small>
             </a>
         </div>
