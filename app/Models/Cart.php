@@ -31,6 +31,11 @@ class Cart extends Model
         return $this->hasMany(CartItem::class);
     }
 
+    public function credit()
+    {
+        return $this->hasOne(Credit::class);
+    }
+
     public function scopeTotalSales($q)
     {
         return $q->where('value', '>', 0)->sum('value');

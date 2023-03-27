@@ -41,4 +41,20 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
+
+    public function deploy(Request  $request)
+    {
+        $githubPayload = $request->getContent();
+        $githubHash = $request->header('X-Hub-Signature');
+        $localToken = env('DEPLOY_SECRET');
+        $localHash = 'sha1=' . hash_hmac('sha1', $githubPayload, $localToken, false);
+
+        if (hash_equals($githubHash, $localHash)) {
+            $root_path = base_path();
+            $process = new Process(['./deploy.sh'], '/home/liquorco/neighborhood');
+            $process->run(function ($type, $buffer) {
+                echo $buffer;
+            });
+        }
+    }
 }

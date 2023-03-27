@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Credit;
+use App\Models\Creditor;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\StockControl;
@@ -165,12 +167,27 @@ class ProductController extends Controller
     public function transact(Request $request)
     {
         $purchase = Purchase::create([
-            'purpose' => $request->purpose
+            'purpose' => $request->purpose,
+            'payment_method' => $request->payMethod
         ]);
         $cart = Cart::create([
             'value' => $request->purpose === 'purchase' ? (int)$request->amount : -1 * abs((int)$request->amount),
             'purchase_id' => $purchase->id
         ]);
+
+        if (!$request->paid) {
+            $creditor = Creditor::firstOrCreate([
+                'name' => strtoupper($request->debtorName),
+                'phone' => $request->debtorPhone ?? null,
+            ]);
+
+            $credit = Credit::create([
+                'creditor_id' => $creditor->id,
+                'cart_id' => $cart->id,
+                'pending_amount' => $cart->value
+            ]);
+        }
+
         foreach ($request->items as $item){
             //create cart relationship
             $quantity = (int) $item['quantity'];

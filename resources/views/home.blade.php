@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    @if(in_array(\Illuminate\Support\Facades\Auth::user()->email, ['abrahamaguvasu@gmail.com', 'muteshiteddy@gmail.com']))
+    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('admin'))
     <div class="row my-2 text-center">
         <div class="col-6 col-lg-3 my-1">
             <a class="card card-body bg-success bg-opacity-25 btn">
@@ -32,16 +32,24 @@
     @endif
     <div class="row my-2 text-center">
         <div class="col-6 col-lg-3 my-1">
-            <a class="card card-body bg-success bg-opacity-25 btn" href="{{ route('sales.index', ['period' => 'day']) }}">
+            <a class="card card-body bg-success bg-opacity-25 btn h-100" href="{{ route('sales.index', ['period' => 'day']) }}">
                 <h4>{{ $salesToday = \App\Models\Cart::totalSalesToday() }}</h4>
                 <small>Sales Today</small>
                 <small class="float-left small link">View Details</small>
             </a>
         </div>
+        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('admin'))
         <div class="col-6 col-lg-3 my-1">
-            <a class="card card-body bg-success bg-opacity-25 btn">
+            <a class="card card-body bg-success bg-opacity-25 btn h-100">
                 <h4>{{ $salesToday = \App\Models\Cart::totalSalesMonth() }}</h4>
                 <small>Sales This Month</small>
+            </a>
+        </div>
+        @endif
+        <div class="col-6 col-lg-3 my-1">
+            <a class="card card-body bg-success bg-opacity-25 btn h-100">
+                <h4>{{ $salesToday = \App\Models\Cart::totalSalesWeek() }}</h4>
+                <small>Sales This Week</small>
             </a>
         </div>
     </div>
@@ -57,9 +65,34 @@
     <hr>
     <div class="row justify-content-center">
         <div class="col-12 col-lg-6 my-1">
-            <make-sale purpose="purchase"></make-sale>
+            <div class="row px-2">
+                <make-sale purpose="purchase"></make-sale>
+            </div>
+            <div class="row mt-3 px-2">
+                <div class="card px-0">
+                    <div class="card-header">
+                        <span class="">Debtors</span>
+                        <a class="btn btn-secondary float-end py-0" href="#" type="button">Show All</a>
+                    </div>
+
+                    <div class="card-body">
+                        <ul class="list px-2">
+                            @foreach(\App\Models\Creditor::all() as $creditor)
+                                <li class="list-group-item">
+                                    <h3 class="form-control">
+                                        {{ $creditor->name }}
+                                        <span class="fw-bold float-end px-2 rounded bg-light">
+                                            Ksh. {{ $creditor->amount_owed }}
+                                        </span>
+                                    </h3>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        @if(in_array(\Illuminate\Support\Facades\Auth::user()->email, ['abrahamaguvasu@gmail.com', 'muteshiteddy@gmail.com']))
+        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('admin'))
             <div class="col-12 col-lg-6 my-1">
                 <div class="card">
                     <div class="card-header">
