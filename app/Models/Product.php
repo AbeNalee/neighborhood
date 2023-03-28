@@ -30,7 +30,7 @@ class Product extends Model
 
     public function getProfitMarginAttribute()
     {
-        return $this->sell_price - $this->buy_price;
+        return $this->sell_price - $this->stocks()->latest()->first()->buy_price;
     }
 
     public function getValueAttribute()

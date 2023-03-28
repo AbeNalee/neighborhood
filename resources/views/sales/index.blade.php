@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="content">
-
+        <?php
+        $hasRole = \Illuminate\Support\Facades\Auth::user()->hasRole('admin');
+        $total = 0;
+        $profit = 0;
+        ?>
         <div class="container">
             <h2 class="mb-5">
                 <span class="">Sales</span>
@@ -11,10 +15,6 @@
             </h2>
 
             <div class="table-responsive">
-                <?php
-                $hasRole = \Illuminate\Support\Facades\Auth::user()->hasRole('admin');
-                ?>
-
                 <table class="table table-striped custom-table">
                     <thead>
                     <tr>
@@ -25,16 +25,15 @@
                             </label>
                         </th>
                         <th scope="col">Product</th>
+                        @if($hasRole)<th scope="col">Profit Margin</th>@endif
                         <th scope="col">Sell Price</th>
-                        @if($hasRole)<th scope="col">Quantity</th>@endif
+                        <th scope="col">Quantity</th>
                         <th scope="col">Amount</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    $total = 0;
-                    ?>
+
                     @foreach($sales as $sale)
                         @if($sale->cart !== null)
                             @foreach($sale->cart->cartItems as $item)
@@ -48,6 +47,11 @@
                                     <td>
                                         {{ $item->product->name }}
                                     </td>
+                                    @if($hasRole)
+                                        <td>
+                                            {{ $margin = $item->product->profit_margin }}
+                                        </td>
+                                    @endif
                                     <td>
                                         {{ $item->product->sell_price }}
                                     </td>
@@ -58,7 +62,7 @@
                                     </td>
                                     <td class="px-2">
                                         {{ $soldAmount = $item->product->sell_price * $quantity }}
-                                        <?php $total += $soldAmount?>
+                                        <?php $total += $soldAmount; $profit += ($item->product->profit_margin * $quantity);?>
                                     </td>
                                 </tr>
                             @endforeach
@@ -74,6 +78,7 @@
                             </td>
                             <td></td>
                             <td></td>
+                            <td>Profit: {{ $profit }}</td>
                             <td>{{ $total }}</td>
                             <td></td>
                         </tr>
@@ -81,11 +86,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="makeSaleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body p-0">
-                            <add-item></add-item>
+                            <make-sale purpose="purchase"></make-sale>
                         </div>
                     </div>
                 </div>
